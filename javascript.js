@@ -1,50 +1,39 @@
 $(function(){
-var words = ["strawberry","rasberry","blueberry","orange","apple","cherry","banana","pineapple"];
+const words = ["strawberry","rasberry","blueberry","orange","apple","cherry","banana","pineapple"];
 
-const remainingGuesses = 6;
-var guessingWordText = "";
-var answerArray = [];
+const maxTries = 6;
+let currentWord = "";
+let answerArray = [];
 
 
-var word = words[Math.floor(Math.random() * words.length)];
-for (var i = 0; i < word.length; i++) {
+let word = words[Math.floor(Math.random() * words.length)];
+for (let i = 0; i < word.length; i++) {
   answerArray.push('_');
-  guessingWordText += answerArray[i];
-  document.getElementById('currentWord').innerHTML = guessingWordText;
+  currentWord += answerArray[i];
+  document.getElementById("currentWord").innerHTML = currentWord;
 }
 
-function evaluateGuess(letter){
-  document.getElementById("remainingGuesses").innerHTML = remainingGuesses;
-  var guessLetters = [];
-  for (let i = 0; i < word.length; i++){
-    if(word[i] === letter){
-      guessLetters.push(i);
+document.addEventListener('keypress', (event) => {
+  //Set an empty array to store guessed letters
+  let guessLetters = [];
+  let keyword = String.fromCharCode(event.keyCode);
+  //if user guesses correct
+  if(word.indexOf(keyword) > -1 ){
+    //add to the guessLetter array
+    guessLetters.push(keyword);
+    //replace underscore with the right letter
+    answerArray[guessLetters.indexOf(keyword)] = keyword;
+    //check to see if the random word matches guesses
+    if (guessLetters.join('') === word) {
+      alert('You win');
     }
-  }
-  if (remainingGuesses == 0){
-    remainingGuesses --;
-    alert("You are out of guesses. Please try again!")
   } else {
-    for (let i = 0; i < guessLetters.length; i++){
-      answerArray[guessLetters[i]] = letter;
-    }
+    let remainingGuesses = document.getElementById("remainingGuesses").innerHTML;
+    remainingGuesses = maxTries;
+    remainingGuesses--;
+      if(remainingGuesses === 0){
+        alert("You lost. Try again next time")
+      }
   }
-}
-//  var remainingLetters = word.length;
-//  while (remainingLetters > 0) {
-//    alert(answerArray.join(" "));
-//    var guess = prompt("Guess a letter, or click Cancel to stop playing.");
-//    if (guess === null) {
-//     break;
-//  } else if (guess.length !== 1) {
-//    alert("Please enter a single letter.");
-//  } else {
-//    for (var j = 0; j < word.length; j++) {
-//       if (word[j] === guess.toLowerCase()) {
-//         answerArray[j] = guess.toLowerCase();
-//         remainingLetters--;
-//       }
-//     }
-//   }
-// }
 })
+});
